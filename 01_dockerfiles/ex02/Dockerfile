@@ -1,10 +1,23 @@
-FROM ft-rails:on-build
+FROM ruby:2.7.2
 
-EXPOSE 3000
-CMD [ "rails" , "s", "-b", "0.0.0.0", "-p", "3000"]
+ENV PORT 3000
 
-# How to build it?
-# docker build -t ex02 .
+EXPOSE $PORT
 
-# How to run it?
-# docker run -it --rm -p 3000:3000 ex02
+RUN mkdir -p /opt/
+
+WORKDIR /opt/
+
+RUN gem install rails bundler
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+RUN apt-get update -qq && apt-get install -yf nodejs yarn
+
+RUN rails new app 
+
+WORKDIR /opt/app/
+
+RUN bundle update && bundle install

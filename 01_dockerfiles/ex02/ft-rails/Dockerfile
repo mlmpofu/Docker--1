@@ -1,16 +1,4 @@
-FROM ruby:2.7.2
+FROM	ft-rails:on-build
 
-MAINTAINER mlmpofu
-
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
-
-ONBUILD COPY app /opt/app
-ONBUILD WORKDIR /opt/app
-
-ONBUILD EXPOSE 3000
-ONBUILD RUN bundle install
-ONBUILD RUN rake db:migrate
-ONBUILD RUN rake db:seed
-
-# How to build it?
-# docker build -t ft-rails:on-build .
+EXPOSE 3000  
+CMD ["rails", "s", "-b", "0.0.0.0", "-p", "3000"]
